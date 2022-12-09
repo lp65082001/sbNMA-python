@@ -3,6 +3,12 @@ from package import load_file, potential
 
 '''
 class build_Hessian:
+    def __init__(self,mode):
+        self.mode = mode
+
+    def build(self):
+        if (self.mode == "charmm"):
+
 
 class normal_mode_analysis:
 '''   

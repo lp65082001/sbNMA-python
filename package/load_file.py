@@ -1,4 +1,4 @@
-import numpy as numpy
+import numpy as  np
 import re
 
 class load_lammps_data:
@@ -7,6 +7,23 @@ class load_lammps_data:
         self.path = filename
 
     def load(self):
+
+        ''' type list '''
+        mass_type = []
+        bond_type = []
+        angle_type = []
+        dihredal_type = []
+        improper_type = []
+
+
+        ''' structure list '''
+        atom_list = []
+        bond_list = []
+        angle_list = []
+        dihredal_list = []
+        improper_list = []
+ 
+
         print("Load file")
         with open(self.path) as f:
             lines = f.readlines()
