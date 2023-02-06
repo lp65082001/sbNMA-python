@@ -333,6 +333,7 @@ SS   CS    205.000     1.8360 ! ALLOW   SUL
                 ! methylthiolate 6-31+G* geom/freq, adm jr., 6/1/92
 HR1  CD    330.000     1.1100 ! acetaldehyde, benzaldehyde, 3ALP
 O    CD    720.000     1.2050 ! acetaldehyde, benzaldehyde, 3ALP. DIFFERENT COPY OF SAME PARAMETER IN stream/toppar_all27_na_bkb_modifications.str
+OH1  CP2   428.000     1.4300 ! HYP
 
 ANGLES
 !

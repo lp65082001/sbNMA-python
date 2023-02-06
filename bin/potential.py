@@ -1,20 +1,21 @@
-import numpy as numpy
+#!/usr/bin/env python
+# coding: utf-8
+from parmed.charmm import CharmmParameterSet
+import numpy as np
 
-'''
+
 class charmm_potential:
-    def __int__(self,x,,ymode = bonding_only):
-        if (mode == bonding_only):
+    def __init__(self,x,y,mode = 'bonding_only'):
+        self.params = CharmmParameterSet('./par_file/par_all22_prot.prm')
+        if (mode == 'bonding_only'):
             self.bond_index = x[0]
-            self.bond_atom = x[1]
-            self.angle_index = x[2]
-            self.angle_atom = x[3]
-            self.dihedral_index = x[4]
-            self.dihedral_atom = x[5]
-            self.improper_index = x[6]
-            self.improper_atom = x[7]
-            self.nonbond_index = x[8]
-            self.nonbond_table = x[9]
-            self.position = x[10]
+            self.angle_index = x[1]
+            self.dihedral_index = x[2]
+            self.improper_index = x[3]
+            self.nonbond_index = x[4]
+            self.nonbond_table = x[5]
+            self.position = x[6]
+            self.type = x[7]
             self.structure = y
         else:
             print('Error XD')
@@ -23,9 +24,12 @@ class charmm_potential:
         
         
     def bond_parameter_table(self):
+        bond_par = []
         for i in range(0,self.bond_index.shape[0]):
-            self.structure.bond_types[(self.bond_atom[i,0],self.bond_atom[i,1])]
+            bond_par.append(self.params.bond_types[(self.type[self.bond_index[i,0]], self.type[self.bond_index[i,1]])])
+            
+        return np.array(bond_par)
 
 
-'''
+
 

@@ -4,6 +4,7 @@ from parmed.charmm import CharmmParameterSet
 import parmed as pmd
 import re
 import numpy as np
+import MDAnalysis as mda
 
 
 class load_psf_pdb_file:
@@ -12,6 +13,8 @@ class load_psf_pdb_file:
         self.structure = psf
         self.coordinate = pdb
         self.mode_ = mode
+        u = mda.Universe(psf, pdb)
+        self.real_type = u.select_atoms("all").types
 
     def load(self):   
         if (self.mode_ == "bonding_only"):
@@ -119,12 +122,13 @@ class load_psf_pdb_file:
 
     def get_table(self):
         if (self.mode_ == "bonding_only"):
-            return [self.bond_index, self.bond_atom,
-            self.angle_index, self.angle_atom,
-            self.dihedral_index, self.dihedral_atom,
-            self.improper_index, self.improper_atom,
+            return [self.bond_index,
+            self.angle_index, 
+            self.dihedral_index,
+            self.improper_index,
             self.nonbonded_index, self.nonbond_par,
-            self.position]
+            self.position,
+            self.real_type]
  
         else:
             print("Error XD")
