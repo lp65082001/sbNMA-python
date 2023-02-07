@@ -990,6 +990,15 @@ SS   CS   HA     40.000   112.3000 ! ALLOW SUL
                 ! methylthiolate 6-31+G* geom/freq, adm jr., 6/1/92
 O    CD   HR1    75.000   121.0000 ! acetaldehyde, benzaldehyde, 3ALP, retinal
 
+OH1  CT1  CT2    75.700   110.1000 ! HYL same as O-CT1-CT1/3
+CT2  CT1  CT2    58.350   113.60   11.16   2.56100 ! HYL from glycerol
+NH3  CT2  CT1    67.700   110.0000 ! HYL in Gromacs same parameters for NH3-CHn-CHn
+
+H    OH1  CP2    65.000   109.5000 ! HYP
+OH1  CP2  CP2    50.000   112.5000 ! HYP
+OH1  CP2  CP3    50.000   112.2000 ! HYP
+OH1  CP2  HA     45.900   111.0000 ! HYP
+
 DIHEDRALS
 !
 !V(dihedral) = Kchi(1 + cos(n(chi) - delta))
@@ -1885,6 +1894,14 @@ X    CT3  OH1  X        0.1400  3     0.00 ! ALLOW   ALI ALC ARO
                 ! EMB  11/21/89 methanol vib fit
 X    CT3  OS   X       -0.1000  3     0.00 ! ALLOW   PEP POL
                 ! adm jr. 3/19/92, from lipid methyl acetate
+
+H    OH1  CP2  CP2      0.9900  2   180.00 ! HYP
+H    OH1  CP2  CP3      0.9900  2   180.00 ! HYP
+X    CP2  OH1  X        0.1400  3     0.00 ! HYP
+C    CT2  NH3  HC        0.1000  3     0.00 ! ALLOW   ALI POL
+                ! 0.715->0.10 METHYLAMMONIUM (KK)
+HB    CT2  NH3  HC        0.1000  3     0.00 ! ALLOW   ALI POL
+                ! 0.715->0.10 METHYLAMMONIUM (KK)
 
 IMPROPER
 !

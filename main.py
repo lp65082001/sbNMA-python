@@ -16,4 +16,4 @@ if __name__ == '__main__':
     model_info.get_table()
     
     potent = potential.charmm_potential(model_info.get_table(),psf)
-    print(potent.bond_parameter_table())
+    print(potent.dihedral_parameter_table())

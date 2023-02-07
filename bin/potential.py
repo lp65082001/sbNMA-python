@@ -26,10 +26,26 @@ class charmm_potential:
     def bond_parameter_table(self):
         bond_par = []
         for i in range(0,self.bond_index.shape[0]):
-            bond_par.append(self.params.bond_types[(self.type[self.bond_index[i,0]], self.type[self.bond_index[i,1]])])
+            bond_par.append([self.params.bond_types[(self.type[self.bond_index[i,0]], self.type[self.bond_index[i,1]])].k,
+            self.params.bond_types[(self.type[self.bond_index[i,0]], self.type[self.bond_index[i,1]])].req])
             
-        return np.array(bond_par)
+        return np.array(bond_par).reshape(-1,2)
+    
+    def angle_parameter_table(self):
+        angle_par = []
+        #print(self.params.angle_types[('OH1', 'CP2','CP3' )])
+        for i in range(0,self.angle_index.shape[0]):
+            angle_par.append([self.params.angle_types[(self.type[self.angle_index[i,0]], self.type[self.angle_index[i,1]], self.type[self.angle_index[i,2]])].k,
+            self.params.angle_types[(self.type[self.angle_index[i,0]], self.type[self.angle_index[i,1]], self.type[self.angle_index[i,2]])].theteq])
 
+        return np.array(angle_par).reshape(-1,2)
+    
+    def dihedral_parameter_table(self):
+        dihedral_par = []
+        #print(self.params.angle_types[('OH1', 'CP2','CP3' )])
+        for i in range(0,self.dihedral_index.shape[0]):
+            dihedral_par.append(self.params.dihedral_types[(self.type[self.dihedral_index[i,0]], self.type[self.dihedral_index[i,1]], self.type[self.dihedral_index[i,2]], self.type[self.dihedral_index[i,3]])])
 
+        return np.array(dihedral_par)
 
 
