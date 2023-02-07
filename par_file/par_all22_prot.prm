@@ -1898,10 +1898,207 @@ X    CT3  OS   X       -0.1000  3     0.00 ! ALLOW   PEP POL
 H    OH1  CP2  CP2      0.9900  2   180.00 ! HYP
 H    OH1  CP2  CP3      0.9900  2   180.00 ! HYP
 X    CP2  OH1  X        0.1400  3     0.00 ! HYP
+HA    CP2  OH1  H        0.1400  3     0.00 ! HYP
 C    CT2  NH3  HC        0.1000  3     0.00 ! ALLOW   ALI POL
                 ! 0.715->0.10 METHYLAMMONIUM (KK)
 HB    CT2  NH3  HC        0.1000  3     0.00 ! ALLOW   ALI POL
                 ! 0.715->0.10 METHYLAMMONIUM (KK)
+NH1    CT1  CT2  CT1        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+NH1    CT1  CT2  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT3    CT1  CT2  CT1        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HA    CT1  CT2  CT1        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HB    CT1  CT2  CT1        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HB    CT1  CT2  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT2    CT1  CT3  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+C    CT1  CT2  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT3    CT1  CT2  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HA    CT1  CT2  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+C    CT1  CT2  CT1        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HA    CT1  CT3  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT3    CT1  CT3  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+N    CP3  CP2  CP2        0.1400  3     0.00 ! ALLOW PRO
+                ! 6-31g* AcProNH2, ProNH2, 6-31g*//3-21g AcProNHCH3 RLD 4/23/93            
+N    CP3  CP2  HA        0.1400  3     0.00 ! ALLOW PRO
+                ! 6-31g* AcProNH2, ProNH2, 6-31g*//3-21g AcProNHCH3 RLD 4/23/93            
+N    CP3  CP2  OH1        0.1400  3     0.00 ! ALLOW PRO
+                ! 6-31g* AcProNH2, ProNH2, 6-31g*//3-21g AcProNHCH3 RLD 4/23/93            
+N    CP1  CP2  CP2        0.1400  3     0.00 ! ALLOW PRO
+                ! 6-31g* AcProNH2, ProNH2, 6-31g*//3-21g AcProNHCH3 RLD 4/23/93
+N    CP1  CP2  HA        0.1400  3     0.00 ! ALLOW PRO
+                ! 6-31g* AcProNH2, ProNH2, 6-31g*//3-21g AcProNHCH3 RLD 4/23/93
+CP1    CP2  CP2  CP3        0.1600  3     0.00 ! ALLOW PRO
+                ! 6-31g* AcProNH2, ProNH2, 6-31g*//3-21g AcProNHCH3 RLD 4/23/93
+CP1    CP2  CP2  HA        0.1600  3     0.00 ! ALLOW PRO
+                ! 6-31g* AcProNH2, ProNH2, 6-31g*//3-21g AcProNHCH3 RLD 4/23/93
+CP1    CP2  CP2  OH1        0.1600  3     0.00 ! ALLOW PRO
+                ! 6-31g* AcProNH2, ProNH2, 6-31g*//3-21g AcProNHCH3 RLD 4/23/93
+HB    CP1  CP2  CP2        0.1400  3     0.00 ! ALLOW PRO
+                ! 6-31g* AcProNH2, ProNH2, 6-31g*//3-21g AcProNHCH3 RLD 4/23/93
+HB    CP1  CP2  HA        0.1400  3     0.00 ! ALLOW PRO
+                ! 6-31g* AcProNH2, ProNH2, 6-31g*//3-21g AcProNHCH3 RLD 4/23/93
+CP3    CP2  CP2  HA        0.1600  3     0.00 ! ALLOW PRO
+                ! 6-31g* AcProNH2, ProNH2, 6-31g*//3-21g AcProNHCH3 RLD 4/23/93
+HA    CP3  CP2  CP2        0.1400  3     0.00 ! ALLOW PRO
+                ! 6-31g* AcProNH2, ProNH2, 6-31g*//3-21g AcProNHCH3 RLD 4/23/93            
+HA    CP3  CP2  HA        0.1400  3     0.00 ! ALLOW PRO
+                ! 6-31g* AcProNH2, ProNH2, 6-31g*//3-21g AcProNHCH3 RLD 4/23/93 
+HA    CP3  CP2  OH1        0.1400  3     0.00 ! ALLOW PRO
+                ! 6-31g* AcProNH2, ProNH2, 6-31g*//3-21g AcProNHCH3 RLD 4/23/93 
+C    CP1  CP2  CP2        0.1400  3     0.00 ! ALLOW PRO
+                ! 6-31g* AcProNH2, ProNH2, 6-31g*//3-21g AcProNHCH3 RLD 4/23/93
+C    CP1  CP2  HA        0.1400  3     0.00 ! ALLOW PRO
+                ! 6-31g* AcProNH2, ProNH2, 6-31g*//3-21g AcProNHCH3 RLD 4/23/93
+HA    CP2  CP2  HA        0.1600  3     0.00 ! ALLOW PRO
+HA    CP2  CP2  OH1        0.1600  3     0.00 ! ALLOW PRO
+NH1    CT1  CT3  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HB    CT1  CT3  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+C    CT1  CT3  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+NH1    CT1  CT2  CT2        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT1    CT2  CT2  CT2        0.1950  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT1    CT2  CT2  HA        0.1950  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HB    CT1  CT2  CT2        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT2    CT2  CT2  HA        0.1950  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HA    CT2  CT2  HA        0.1950  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT2    CT2  CT2  NH3        0.1950  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+C    CT1  CT2  CT2        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT2    CT2  NH3  HC        0.1000  3     0.00 ! ALLOW   ALI POL
+                ! 0.715->0.10 METHYLAMMONIUM (KK)
+HA    CT2  CT2  NH3        0.1950  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HA    CT2  NH3  HC        0.1000  3     0.00 ! ALLOW   ALI POL
+                ! 0.715->0.10 METHYLAMMONIUM (KK)
+NH1    CT1  CT1  OH1        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+NH1    CT1  CT1  CT3        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+NH1    CT1  CT1  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT1    CT1  CT3  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HB    CT1  CT1  OH1        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HB    CT1  CT1  CT3        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HB    CT1  CT1  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+C    CT1  CT1  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HA    CT1  OH1  H        0.1400  3     0.00 ! ALLOW   ALI ALC ARO
+                ! EMB  11/21/89 methanol vib fit
+C    CT1  CT1  OH1        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+OH1    CT1  CT3  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT3    CT1  CT1  C        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+NH1    CT1  CT2  OH1        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HB    CT1  CT2  OH1        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HA    CT2  OH1  H        0.1400  3     0.00 ! ALLOW   ALI ALC ARO
+                ! EMB  11/21/89 methanol vib fit
+C    CT1  CT2  OH1        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+NH1    CT1  CT2  CC        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT1    CT2  CC   OC        0.0500  6   180.00 ! ALLOW   POL PEP
+                ! For side chains of asp,asn,glu,gln, (n=6) from KK(LK)
+HB    CT1  CT2  CC        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HA    CT2  CC   OC        0.0500  6   180.00 ! ALLOW   POL PEP
+                ! For side chains of asp,asn,glu,gln, (n=6) from KK(LK)
+C    CT1  CT2  CC        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT1    CT2  CT2  CC        0.1950  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT2    CT2  CC   NH2        0.0500  6   180.00 ! ALLOW   POL PEP
+                ! For side chains of asp,asn,glu,gln, (n=6) from KK(LK)
+CT2    CT2  CC   O        0.0500  6   180.00 ! ALLOW   POL PEP
+                ! For side chains of asp,asn,glu,gln, (n=6) from KK(LK)
+HA    CT2  CT2  CC        0.1950  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+NC2    CT2  CT2  CT2        0.1950  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT2    CT2  NC2  C        0.0000  6   180.00 ! ALLOW   ALI POL
+                ! methylguanidinium, adm jr., 3/26/92
+CT2    CT2  NC2  HC        0.0000  6   180.00 ! ALLOW   ALI POL
+                ! methylguanidinium, adm jr., 3/26/92
+HA    CT2  CT2  NC2        0.1950  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+NC2    C    NC2  CT2        2.2500  2   180.00 ! ALLOW   PEP POL ARO
+                ! 9.0->2.25 GUANIDINIUM (KK)
+HA    CT2  NC2  C        0.0000  6   180.00 ! ALLOW   ALI POL
+                ! methylguanidinium, adm jr., 3/26/92
+HA    CT2  NC2  HC        0.0000  6   180.00 ! ALLOW   ALI POL
+                ! methylguanidinium, adm jr., 3/26/92
+NC2    C    NC2  HC        2.2500  2   180.00 ! ALLOW   PEP POL ARO
+                ! 9.0->2.25 GUANIDINIUM (KK)
+CT1    CT2  CT2  S        0.1950  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+NH1    CT1  CT2  CA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HB    CT1  CT2  CA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HA    CT2  CA   CA        0.0000  6     0.00 ! ALLOW   ALI ARO
+                ! toluene, adm jr., 3/7/92
+CT2    CT2  CC   OC        0.0500  6   180.00 ! ALLOW   POL PEP
+                ! For side chains of asp,asn,glu,gln, (n=6) from KK(LK)
+NH1    CT2  CC   OC        0.0500  6   180.00 ! ALLOW   POL PEP
+                ! For side chains of asp,asn,glu,gln, (n=6) from KK(LK)
+HB    CT2  CC   OC        0.0500  6   180.00 ! ALLOW   POL PEP
+                ! For side chains of asp,asn,glu,gln, (n=6) from KK(LK)
+CT1    CT2  CC   NH2        0.0500  6   180.00 ! ALLOW   POL PEP
+                ! For side chains of asp,asn,glu,gln, (n=6) from KK(LK)
+CT1    CT2  CC   O        0.0500  6   180.00 ! ALLOW   POL PEP
+                ! For side chains of asp,asn,glu,gln, (n=6) from KK(LK)
+NH1    CT1  CT1  CT2        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT1    CT1  CT2  CT3        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT1    CT1  CT2  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HB    CT1  CT1  CT2        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT1    CT2  CT3  HA        0.1600  3     0.00 ! ALLOW   ALI
+                ! rotation barrier in Ethane (SF)
+HA    CT1  CT2  CT3        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT3    CT1  CT2  CT3        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT2    CT1  CT1  C       0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HA    CT2  CT3  HA        0.1600  3     0.00 ! ALLOW   ALI
+                ! rotation barrier in Ethane (SF)
+NH1    CT1  CT2  CPH1        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+HB    CT1  CT2  CPH1        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+C    CT1  CT2  CPH1        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
 
 IMPROPER
 !
