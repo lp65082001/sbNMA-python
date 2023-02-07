@@ -8,7 +8,7 @@ import MDAnalysis as mda
 
 
 class load_psf_pdb_file:
-    def __init__(self,psf,pdb,mode="bonding_only"):
+    def __init__(self,psf,pdb,mode="bad"):
         self.params = CharmmParameterSet('./par_file/par_all22_prot.prm')
         self.structure = psf
         self.coordinate = pdb
@@ -17,8 +17,8 @@ class load_psf_pdb_file:
         self.real_type = u.select_atoms("all").types
 
     def load(self):   
-        if (self.mode_ == "bonding_only"):
-            print('Load only bonding potential')
+        if (self.mode_ == "bad"):
+            print('Load only bad potential')
             self.bond_index, self.bond_atom = self.create_bond_list(self.structure)
             self.angle_index, self.angle_atom = self.create_angle_list(self.structure)
             self.dihedral_index, self.dihedral_atom = self.create_dihedral_list(self.structure)
@@ -121,7 +121,7 @@ class load_psf_pdb_file:
         return z.coordinates
 
     def get_table(self):
-        if (self.mode_ == "bonding_only"):
+        if (self.mode_ == "bad"):
             return [self.bond_index,
             self.angle_index, 
             self.dihedral_index,

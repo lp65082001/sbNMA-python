@@ -5,9 +5,9 @@ import numpy as np
 
 
 class charmm_potential:
-    def __init__(self,x,y,mode = 'bonding_only'):
+    def __init__(self,x,y,mode = 'bad'):
         self.params = CharmmParameterSet('./par_file/par_all22_prot.prm')
-        if (mode == 'bonding_only'):
+        if (mode == 'bad'):
             self.bond_index = x[0]
             self.angle_index = x[1]
             self.dihedral_index = x[2]

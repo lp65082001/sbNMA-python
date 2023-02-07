@@ -12,8 +12,14 @@ if __name__ == '__main__':
     model_info = load_file.load_psf_pdb_file(psf,pdb)
     model_info.load()
     
-
+    # get model info list #
     model_info.get_table()
     
+    # get potential parameter #
     potent = potential.charmm_potential(model_info.get_table(),psf)
-    print(potent.dihedral_parameter_table())
+    potent.parameter_table()
+
+    # build hessian matrix #
+
+
+    # solve eigenvalue and eigenvector #
