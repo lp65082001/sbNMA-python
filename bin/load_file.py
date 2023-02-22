@@ -25,6 +25,7 @@ class load_psf_pdb_file:
             #self.improper_index, self.improper_atom = self.create_improper_list(self.structure)
             self.nonbonded_index, self.nonbond_par = self.create_nonbonded_table(self.params)
             self.position = self.create_position_table(self.coordinate)
+            self.mass_table = self.create_mass_table()
             print('Done')
         else:
             print('Error XD')
@@ -120,6 +121,22 @@ class load_psf_pdb_file:
     def create_position_table(self,z):
         return z.coordinates
 
+    def create_mass_table(self):
+        # custom #
+        mass_table = []
+        for i in self.real_type:
+            if(i[0]=='H'):
+                mass_table.append(1.008)
+            elif(i[0]=='C'):
+                mass_table.append(12.011)
+            elif(i[0]=='N'):
+                mass_table.append(14.007)
+            elif(i[0]=='O'):
+                mass_table.append(15.999)
+            elif(i[0]=='S'):
+                mass_table.append(32.06)
+        return np.array(mass_table)
+
     def get_table(self):
         if (self.mode_ == "bad"):
             return [self.bond_index,
@@ -128,7 +145,8 @@ class load_psf_pdb_file:
             #self.improper_index,
             self.nonbonded_index, self.nonbond_par,
             self.position,
-            self.real_type]
+            self.real_type,
+            self.mass_table]
  
         else:
             print("Error XD")
