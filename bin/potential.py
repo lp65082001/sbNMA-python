@@ -13,8 +13,8 @@ class charmm_potential:
             self.dihedral_index = x[2]
             self.nonbond_index = x[3]
             self.nonbond_table = x[4]
-            self.position = x[5]
-            self.type = x[6]
+            #self.position = x[5]
+            self.type = x[5]
             self.structure = y
         else:
             print('Error XD')

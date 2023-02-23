@@ -10,16 +10,16 @@ warnings.filterwarnings('ignore')
 
 class Hessian:
 
-    def __init__(self,index,potential,mode='bad'):
+    def __init__(self,index,potential,pos,mode='bad'):
         if (mode == 'bad'):
             self.bond_index = index[0]
             self.angle_index = index[1]
             self.dihedral_index = index[2]
             self.nonbonded_index = index[3]
             self.nonbond_par = index[4]
-            self.position = index[5]
-            self.real_type = index[6]
-            self.mass_type = index[7]
+            self.position = pos
+            self.real_type = index[5]
+            self.mass_type = index[6]
             self.bond_par = potential[0]
             self.angle_par = potential[1]
             self.dihedral_par = potential[2]
@@ -370,9 +370,8 @@ class Hessian:
             angle_times.update(1)
             num_cout += 1
         angle_times.close()
-
-        print("hessian mattrix builded")
         print("Symmetric matrix: {}".format(self.check_symmetric(hm)))
+        print("hessian mattrix builded")
         return hm
 
     #def energy_minimize(self):
@@ -380,6 +379,7 @@ class Hessian:
     def solve_Hessian(self,h):
        print("Solve eignvalue and eignvector")
        h_val, h_vec = jax.numpy.linalg.eigh(h)
+       print("Done")
        return h_val, h_vec
     
     #def PCA_frequence(self,n=20):
