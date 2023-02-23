@@ -24,13 +24,11 @@ if __name__ == '__main__':
     
     hessian_ = hessian_build.Hessian(model_index,model_potential)
     hessian_martix = hessian_.build_matrix()
-    
-    start = time.time()
-    eignvalue,eignvector = hessian_.solve_Hessian(hessian_martix)
-    
-    endtime = time.time()
-    print (endtime - start)
-    print(hessian_martix)
 
     # solve eigenvalue and eigenvector #
+    eignvalue,eignvector = hessian_.solve_Hessian(hessian_martix)
+
+
+
+    
 

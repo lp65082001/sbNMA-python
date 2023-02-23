@@ -1,6 +1,6 @@
 import numpy as np
 from sympy import symbols, acos, diff, sin, cos, lambdify
-from tqdm import tqdm
+from tqdm.auto  import tqdm
 #import cupy as cp
 import warnings 
 import time
@@ -28,6 +28,8 @@ class Hessian:
             print('Error XD')
 
 
+    def check_symmetric(self,a, tol=1e-8):
+        return np.all(np.abs(a-a.T) < tol)
 
     def element_initialization(self):
         print("Element initialization!")
@@ -336,16 +338,16 @@ class Hessian:
     #def dihedral_K(self,x1,x2,x3,x4):
     
     #def nonbonded_K(self,x1,x2)
-
+    
     def build_matrix(self):
         self.element_initialization()
-
+        print("Done")
         # initial hessian matrix #
         hm = np.zeros((self.mass_type.shape[0]*3,self.mass_type.shape[0]*3))
   
         num_cout = 0
         print("Build bond potential")
-        bond_times = tqdm(total=self.bond_index.shape[0])
+        bond_times = tqdm(total=self.bond_index.shape[0],ncols=100)
         for i,j in self.bond_index*3:
 
             k_n = self.second_deriavete_element_two_body(self.bond_par[num_cout,0],self.bond_par[num_cout,1],self.mass_type[int(i/3)],self.mass_type[int(j/3)],self.position[int(i/3)],self.position[int(j/3)])
@@ -354,10 +356,11 @@ class Hessian:
             
             bond_times.update(1)
             num_cout += 1
+        bond_times.close()
 
         print("Build angle potential")
         num_cout = 0
-        angle_times = tqdm(total=self.angle_index.shape[0])
+        angle_times = tqdm(total=self.angle_index.shape[0],ncols=100)
         for i,j,k in self.angle_index*3:
             
             ka_n = self.second_deriavete_element_three_body(self.angle_par[num_cout,0],np.deg2rad(self.angle_par[num_cout,1]),self.mass_type[int(i/3)],self.mass_type[int(j/3)],self.mass_type[int(k/3)],self.position[int(i/3)],self.position[int(j/3)],self.position[int(k/3)])
@@ -366,14 +369,17 @@ class Hessian:
 
             angle_times.update(1)
             num_cout += 1
+        angle_times.close()
 
         print("hessian mattrix builded")
+        print("Symmetric matrix: {}".format(self.check_symmetric(hm)))
         return hm
 
     #def energy_minimize(self):
 
     def solve_Hessian(self,h):
-       h_val, h_vec = jax.numpy.linalg.eig(h)
+       print("Solve eignvalue and eignvector")
+       h_val, h_vec = jax.numpy.linalg.eigh(h)
        return h_val, h_vec
     
     #def PCA_frequence(self,n=20):
