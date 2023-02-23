@@ -1,7 +1,8 @@
-import numpy as numpy
+import numpy as np
 import parmed as pmd
 from bin import load_file, potential, hessian_build
-from parmed.charmm import CharmmParameterSet    
+from parmed.charmm import CharmmParameterSet 
+from sympy import symbols, acos, diff, sin, cos ,lambdify
 
 
 if __name__ == '__main__':
@@ -23,7 +24,9 @@ if __name__ == '__main__':
     
     hessian_ = hessian_build.Hessian(model_index,model_potential)
     hessian_martix = hessian_.build_matrix()
-    print(hessian_martix)
+    eignvalue,eignvector = hessian_.solve_Hessian(hessian_martix)
+    print(eignvalue)
+    #print(hessian_martix)
+
     # solve eigenvalue and eigenvector #
-   
-    
+
