@@ -42,8 +42,9 @@ class charmm_potential:
         dihedral_par = []
         for i in range(0,self.dihedral_index.shape[0]):
             dihedral_par.append([self.params.dihedral_types[(self.type[self.dihedral_index[i,0]], self.type[self.dihedral_index[i,1]], self.type[self.dihedral_index[i,2]], self.type[self.dihedral_index[i,3]])][0].phi_k,
+            self.params.dihedral_types[(self.type[self.dihedral_index[i,0]], self.type[self.dihedral_index[i,1]], self.type[self.dihedral_index[i,2]], self.type[self.dihedral_index[i,3]])][0].per,
             self.params.dihedral_types[(self.type[self.dihedral_index[i,0]], self.type[self.dihedral_index[i,1]], self.type[self.dihedral_index[i,2]], self.type[self.dihedral_index[i,3]])][0].phase])
         
-        return np.array(dihedral_par).reshape(-1,2)
+        return np.array(dihedral_par).reshape(-1,3)
 
 
