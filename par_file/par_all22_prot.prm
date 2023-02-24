@@ -2099,6 +2099,16 @@ HB    CT1  CT2  CPH1        0.2000  3     0.00 ! ALLOW   ALI
                 ! alkane update, adm jr., 3/2/92
 C    CT1  CT2  CPH1        0.2000  3     0.00 ! ALLOW   ALI
                 ! alkane update, adm jr., 3/2/92
+NH3    CT1  CT2  CT2        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+NH3    CT1  CT2  HA        0.2000  3     0.00 ! ALLOW   ALI
+                ! alkane update, adm jr., 3/2/92
+CT2    CT1  NH3  HC        0.1000  3     0.00 ! ALLOW   ALI POL
+                ! 0.715->0.10 METHYLAMMONIUM (KK)
+C    CT1  NH3  HC        0.1000  3     0.00 ! ALLOW   ALI POL
+                ! 0.715->0.10 METHYLAMMONIUM (KK)
+HB    CT1  NH3  HC        0.1000  3     0.00 ! ALLOW   ALI POL
+                ! 0.715->0.10 METHYLAMMONIUM (KK)
 
 IMPROPER
 !

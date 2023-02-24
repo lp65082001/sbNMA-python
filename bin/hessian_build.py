@@ -28,7 +28,6 @@ class Hessian:
         else:
             print('Error XD')
 
-
     def check_symmetric(self,a, tol=1e-8):
         return np.all(np.abs(a-a.T) < tol)
 
@@ -37,30 +36,32 @@ class Hessian:
         pos_list = []
         pos_table = distance_matrix(self.position,self.position)
         cutoff_dis_list = np.where((np.triu(pos_table,1) < cutoff) & (np.triu(pos_table,1)!=0))
-        # without 1-2, 1-3, 1-4
+        
+        # without 1-2, 1-3, 1-4 (Need careful) #
         vdw_times = tqdm(total=cutoff_dis_list[0].shape[0],ncols=100)
         #for k in range(0,cutoff_dis_list[0].shape[0]):
         for k in range(0,10):
-            if (pos_table[cutoff_dis_list[0][k],cutoff_dis_list[1][k]]!=0):
-                print(cutoff_dis_list[:,k])
-                print(np.where((np.where(self.bond_index==cutoff_dis_list[0][k])[0])))
-                print(np.where((np.where(self.bond_index==cutoff_dis_list[1][k])[0])))
-                if (len(np.unique(np.where((np.where(self.bond_index==cutoff_dis_list[0][k])[0],np.where(self.bond_index==cutoff_dis_list[1][k])[0])==0)[0]))==0): 
-                    if (len(np.unique(np.where((np.where(self.angle_index==cutoff_dis_list[0][k])[0],np.where(self.angle_index==cutoff_dis_list[1][k])[0])==0)[0]))==0):    
-                        if (len(np.unique(np.where((np.where(self.dihedral_index==cutoff_dis_list[0][k])[0],np.where(self.dihedral_index==cutoff_dis_list[1][k])[0])==0)[0]))==0):        
-                            pos_list.append([cutoff_dis_list[0][k],cutoff_dis_list[1][k]])
+            print(np.where(self.bond_index==cutoff_dis_list[0][k]))
+            print(np.where(self.bond_index==cutoff_dis_list[1][k]))
+            if (len(np.intersect1d(np.where(self.bond_index==cutoff_dis_list[0][k])[0],np.where(self.bond_index==cutoff_dis_list[1][k])[0]))==0): 
+                if (len(np.intersect1d(np.where(self.angle_index==cutoff_dis_list[0][k])[0],np.where(self.angle_index==cutoff_dis_list[1][k])[0]))==0):    
+                    if (len(np.intersect1d(np.where(self.dihedral_index==cutoff_dis_list[0][k])[0],np.where(self.dihedral_index==cutoff_dis_list[1][k])[0]))==0):        
+                        pos_list.append([cutoff_dis_list[0][k],cutoff_dis_list[1][k]])
             vdw_times.update()
         vdw_times.close()
         self.vdw_index = np.array(pos_list).reshape((-1,2))
+        
         # mixture potential (mix arithmetic)#
+        print("Build mix arithmetic table")
+        vdw_times_2 = tqdm(total=self.vdw_index.shape[0],ncols=100)
         vdw_pot = []
         for i, j in self.vdw_index:
-            #print(self.nonbond_par[np.where(self.nonbonded_index==self.real_type[i])[0],0])
             eps = (self.nonbond_par[np.where(self.nonbonded_index==self.real_type[i])[0],0]*self.nonbond_par[np.where(self.nonbonded_index==self.real_type[j])[0],0])**0.5
             sig = 0.5*(self.nonbond_par[np.where(self.nonbonded_index==self.real_type[i])[0],1]+self.nonbond_par[np.where(self.nonbonded_index==self.real_type[j])[0],1])
             vdw_pot.append([eps,sig])
+            vdw_times_2.update()
         self.pair_par = np.array(vdw_pot).reshape(-1,2)
-        
+        vdw_times_2.close()
         print("Done") 
 
     def element_initialization(self):
@@ -265,11 +266,11 @@ class Hessian:
         # second deriavete element #
         self.element_initialization()
         # 
-        self.check_distance2vdw(cutoff=5)
+        self.check_distance2vdw(cutoff=8)
 
         # initial hessian matrix #
         hm = np.zeros((self.mass_type.shape[0]*3,self.mass_type.shape[0]*3))
-        '''
+
         num_cout = 0
         print("Build bond potential")
         bond_times = tqdm(total=self.bond_index.shape[0],ncols=100)
@@ -317,7 +318,6 @@ class Hessian:
             num_cout += 1
         dihedral_times.close()
 
-        '''
         print("Build vdw potential")
         num_cout = 0
         vdw_times = tqdm(total=self.vdw_index.shape[0],ncols=100)
