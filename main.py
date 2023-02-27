@@ -1,6 +1,6 @@
 import numpy as np
 import parmed as pmd
-from bin import load_file, potential, hessian_build, energy_minimze
+from bin import load_file, potential, hessian_build, energy_minimze, correlation
 from parmed.charmm import CharmmParameterSet 
 import time
 
@@ -33,6 +33,9 @@ if __name__ == '__main__':
     # solve eigenvalue and eigenvector #
     eignvalue,eignvector = hessian_.solve_Hessian(hessian_martix)
 
+    # calculate dynamics coupling #
+    dc = correlation.dynamics_coupling(eignvalue,eignvector)
+    dc.run()
 
 
     

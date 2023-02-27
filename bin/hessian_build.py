@@ -40,9 +40,9 @@ class Hessian:
         # without 1-2, 1-3, 1-4 (Need careful) #
         vdw_times = tqdm(total=cutoff_dis_list[0].shape[0],ncols=100)
         #for k in range(0,cutoff_dis_list[0].shape[0]):
-        for k in range(0,10):
-            print(np.where(self.bond_index==cutoff_dis_list[0][k]))
-            print(np.where(self.bond_index==cutoff_dis_list[1][k]))
+        for k in range(0,100):
+            #print(np.where(self.bond_index==cutoff_dis_list[0][k]))
+            #print(np.where(self.bond_index==cutoff_dis_list[1][k]))
             if (len(np.intersect1d(np.where(self.bond_index==cutoff_dis_list[0][k])[0],np.where(self.bond_index==cutoff_dis_list[1][k])[0]))==0): 
                 if (len(np.intersect1d(np.where(self.angle_index==cutoff_dis_list[0][k])[0],np.where(self.angle_index==cutoff_dis_list[1][k])[0]))==0):    
                     if (len(np.intersect1d(np.where(self.dihedral_index==cutoff_dis_list[0][k])[0],np.where(self.dihedral_index==cutoff_dis_list[1][k])[0]))==0):        
