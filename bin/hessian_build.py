@@ -340,8 +340,6 @@ class Hessian:
        h_val, h_vec = jax.numpy.linalg.eigh(h)
        print("Done")
        return h_val, h_vec
-    
-    #def PCA_frequence(self,n=20):
 
 
 
