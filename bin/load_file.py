@@ -26,6 +26,7 @@ class load_psf_pdb_file:
             self.nonbonded_index, self.nonbond_par = self.create_nonbonded_table(self.params)
             #self.position = self.create_position_table(self.coordinate)
             self.mass_table = self.create_mass_table()
+            
             print('Done')
         else:
             print('Error XD')
@@ -111,7 +112,7 @@ class load_psf_pdb_file:
         return np.array(index_list), np.array(atom_list)
 
     def create_nonbonded_table(self,y):
-        all_nonbond_table =list(y.atom_types)  
+        all_nonbond_table =list(y.atom_types)     
         table = np.zeros((len(all_nonbond_table),2))
         for i in range(0,len(all_nonbond_table)):
             table[i,0] = y.atom_types_str[all_nonbond_table[i]].epsilon
@@ -136,6 +137,14 @@ class load_psf_pdb_file:
             elif(i[0]=='S'):
                 mass_table.append(32.06)
         return np.array(mass_table)
+    
+    def get_reduce_index(self,name="CA"):
+        red_index = []
+        for i in self.structure.atoms:
+            red_index.append(i.name)
+            #print(i.name)
+        red_index = np.array(red_index)
+        return np.where(red_index==name)[0]
 
     def get_table(self):
         if (self.mode_ == "bad"):
