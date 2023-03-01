@@ -60,6 +60,9 @@ class dynamics_coupling:
             self.ccm_ = ccm_
         ccmt2.close()
         print("Done")
+
+    def get_ccm(self):
+        return self.ccm_
         
     def run(self,reduce=True, ccm = None):
         self.output_list = [ccm]

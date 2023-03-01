@@ -41,6 +41,8 @@ if __name__ == '__main__':
     dc.run(reduce=True,ccm = True)
     dc.plot_matrix()
 
+    np.save('own.npy',dc.get_ccm())
+
 
     
 

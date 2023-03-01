@@ -1,5 +1,7 @@
 from prody import *
 import matplotlib.pyplot as plt
+plt.rcParams['savefig.dpi'] = 300
+plt.rcParams['figure.dpi'] = 300
 
 ubi = parsePDB('1UBQ')
 calphas = ubi.select('protein and name CA')
