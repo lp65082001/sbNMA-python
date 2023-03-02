@@ -24,14 +24,14 @@ class dynamics_coupling:
             im = ax.imshow(self.ccm_,vmin=-1, vmax=1, cmap='cool')
             fig.colorbar(im, ax=ax, label='Cross correlation')
             ax.invert_yaxis()
-            plt.savefig('./result/test.png',bbox_inches='tight')
+            plt.savefig('./result/own.png',bbox_inches='tight')
             #plt.show()
     
-    def vector_table(self,n):    
+    def vector_table(self,n):
         return self.positive_eignvector[:,n].reshape(-1,3)
 
     def non_degenerate_modes(self):
-        self.positive_eignvalue = self.eignvalue[np.where(self.eignvalue>0)[0]]
+        self.positive_eignvalue = self.eignvalue[np.where(self.eignvalue>1e-6)[0]]
         self.new_index = np.argsort(self.positive_eignvalue)
         self.positive_eignvector = self.eignvector[:,self.new_index]
     

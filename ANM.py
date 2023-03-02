@@ -26,3 +26,5 @@ im = ax.imshow(corr,vmin=-1, vmax=1, cmap='cool')
 fig.colorbar(im, ax=ax, label='Cross correlation')
 ax.invert_yaxis()
 plt.savefig('./result/anm.png',bbox_inches='tight')
+
+np.save("./anm.npy",corr)

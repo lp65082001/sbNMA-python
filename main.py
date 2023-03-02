@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
     # solve eigenvalue and eigenvector #
     eignvalue,eignvector = hessian_.solve_Hessian(hessian_martix)
-
+    print(eignvalue)
     # calculate dynamics coupling #
     dc = correlation.dynamics_coupling(eignvalue,eignvector,ca_table=ca_index)
     dc.run(reduce=True,ccm = True)

@@ -1,5 +1,6 @@
 from prody import *
 import matplotlib.pyplot as plt
+import numpy as np
 plt.rcParams['savefig.dpi'] = 300
 plt.rcParams['figure.dpi'] = 300
 
@@ -15,3 +16,5 @@ im = ax.imshow(corr,vmin=-1, vmax=1, cmap='cool')
 fig.colorbar(im, ax=ax, label='Cross correlation')
 ax.invert_yaxis()
 plt.savefig('./result/gnm.png',bbox_inches='tight')
+
+np.save("./gnm.npy",corr)

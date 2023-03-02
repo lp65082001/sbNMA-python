@@ -31,7 +31,7 @@ class Hessian:
     def check_symmetric(self,a, tol=1e-8):
         return np.all(np.abs(a-a.T) < tol)
 
-    def check_distance2vdw(self,cutoff = 5):
+    def check_distance2vdw(self,cutoff = 8):
         print("check pair distance")
         pos_list = []
         pos_table = distance_matrix(self.position,self.position)
@@ -266,7 +266,7 @@ class Hessian:
         # second deriavete element #
         self.element_initialization()
         # 
-        self.check_distance2vdw(cutoff=8)
+        self.check_distance2vdw(cutoff=5)
 
         # initial hessian matrix #
         hm = np.zeros((self.mass_type.shape[0]*3,self.mass_type.shape[0]*3))
@@ -280,7 +280,7 @@ class Hessian:
                                                          self.mass_type[int(i/3)],self.mass_type[int(j/3)],
                                                          self.position[int(i/3)],self.position[int(j/3)])
             
-            hm[np.ix_([i,i+1,i+2,j,j+1,j+2],[i,i+1,i+2,j,j+1,j+2])] += k_n
+            hm[np.ix_([i,i+1,i+2,j,j+1,j+2],[i,i+1,i+2,j,j+1,j+2])] += k_n*6.9477e-3
             
             bond_times.update(1)
             num_cout += 1
@@ -295,29 +295,30 @@ class Hessian:
                                                             self.mass_type[int(i/3)],self.mass_type[int(j/3)],self.mass_type[int(k/3)],
                                                             self.position[int(i/3)],self.position[int(j/3)],self.position[int(k/3)])
             
-            hm[np.ix_([i,i+1,i+2,j,j+1,j+2,k,k+1,k+2],[i,i+1,i+2,j,j+1,j+2,k,k+1,k+2])] += ka_n
+            hm[np.ix_([i,i+1,i+2,j,j+1,j+2,k,k+1,k+2],[i,i+1,i+2,j,j+1,j+2,k,k+1,k+2])] += ka_n*6.9477e-3
 
             angle_times.update(1)
             num_cout += 1
         angle_times.close()
 
-
+        
         print("Build dihedral potential")
         num_cout = 0
         dihedral_times = tqdm(total=self.dihedral_index.shape[0],ncols=100)
         for i,j,k,l in self.dihedral_index*3:
             
-            #ka_n = self.second_deriavete_element_three_body(self.angle_par[num_cout,0],np.deg2rad(self.angle_par[num_cout,1]),self.mass_type[int(i/3)],self.mass_type[int(j/3)],self.mass_type[int(k/3)],self.position[int(i/3)],self.position[int(j/3)],self.position[int(k/3)])
+            
             kd_n = self.second_deriavete_element_four_body(self.dihedral_par[num_cout,0],np.deg2rad(self.dihedral_par[num_cout,2]),self.dihedral_par[num_cout,1],
                                                            self.mass_type[int(i/3)],self.mass_type[int(j/3)],self.mass_type[int(k/3)],self.mass_type[int(l/3)],
                                                            self.position[int(i/3)],self.position[int(j/3)],self.position[int(k/3)],self.position[int(l/3)])
             
-            hm[np.ix_([i,i+1,i+2,j,j+1,j+2,k,k+1,k+2,l,l+1,l+2],[i,i+1,i+2,j,j+1,j+2,k,k+1,k+2,l,l+1,l+2])] += kd_n
+            hm[np.ix_([i,i+1,i+2,j,j+1,j+2,k,k+1,k+2,l,l+1,l+2],[i,i+1,i+2,j,j+1,j+2,k,k+1,k+2,l,l+1,l+2])] += kd_n*6.9477e-3
 
             dihedral_times.update(1)
             num_cout += 1
         dihedral_times.close()
 
+        
         print("Build vdw potential")
         num_cout = 0
         vdw_times = tqdm(total=self.vdw_index.shape[0],ncols=100)
@@ -326,18 +327,23 @@ class Hessian:
                                                          self.mass_type[int(i/3)],self.mass_type[int(j/3)],
                                                          self.position[int(i/3)],self.position[int(j/3)],
                                                          mode='vdw')
-            hm[np.ix_([i,i+1,i+2,j,j+1,j+2],[i,i+1,i+2,j,j+1,j+2])] += k_vn
+            hm[np.ix_([i,i+1,i+2,j,j+1,j+2],[i,i+1,i+2,j,j+1,j+2])] += k_vn*6.9477e-3
             
             vdw_times.update(1)
             num_cout += 1
         vdw_times.close()
+
         print("Symmetric matrix: {}".format(self.check_symmetric(hm)))
-        print("hessian mattrix builded")
+        print("Determinant: {}".format(np.linalg.det(hm)>0))
+        
+
+        print("Hessian mattrix builded")
         return hm
 
     def solve_Hessian(self,h):
        print("Solve eignvalue and eignvector")
        h_val, h_vec = jax.numpy.linalg.eigh(h)
+       print("Positive matrix: {}".format(len(np.where(h_val<0))==0))
        print("Done")
        return h_val, h_vec
 
