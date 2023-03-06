@@ -85,7 +85,7 @@ class Hessian:
         bond_times = tqdm(total=bond_table.shape[0],ncols=100)
         for i,j in bond_table:
             #b_t.append(lambdify((k,b,xi,yi,zi,xj,yj,zj),(bond_potential_form.diff(i).diff(j)),'numpy'))       
-            b_t.append(lambdify((k,xi,yi,zi,xj,yj,zj),(bond_rij.diff(i).diff(j)),'numpy'))
+            b_t.append(lambdify((k,xi,yi,zi,xj,yj,zj),(bond_rij.diff(i)*bond_rij.diff(j)),'numpy'))
             bond_times.update()
         self.bond_element = np.array(b_t)
         bond_times.close()
@@ -288,14 +288,12 @@ class Hessian:
                                                          self.mass_type[int(i/3)],self.mass_type[int(j/3)],
                                                          self.position[int(i/3)],self.position[int(j/3)])
 
-            print(k_n)
-            input() 
             hm[np.ix_([i,i+1,i+2,j,j+1,j+2],[i,i+1,i+2,j,j+1,j+2])] += k_n*6.9477e-3
             
             bond_times.update(1)
             num_cout += 1
         bond_times.close()
-        
+        '''
         print("Build angle potential")
         num_cout = 0
         angle_times = tqdm(total=self.angle_index.shape[0],ncols=100)
@@ -311,7 +309,7 @@ class Hessian:
             num_cout += 1
         angle_times.close()
 
-        '''
+        
         print("Build dihedral potential")
         num_cout = 0
         dihedral_times = tqdm(total=self.dihedral_index.shape[0],ncols=100)
