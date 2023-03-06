@@ -24,7 +24,7 @@ class dynamics_coupling:
             im = ax.imshow(self.ccm_,vmin=-1, vmax=1, cmap='cool')
             fig.colorbar(im, ax=ax, label='Cross correlation')
             ax.invert_yaxis()
-            plt.savefig('./result/own.png',bbox_inches='tight')
+            plt.savefig('./result/test.png',bbox_inches='tight')
             #plt.show()
     
     def vector_table(self,n):
