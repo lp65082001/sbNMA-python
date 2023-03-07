@@ -13,9 +13,9 @@ class Hessian:
 
     def __init__(self,index,potential,pos,mode='bad'):
         if (mode == 'bad'):
-            self.bond_index = index[0]
-            self.angle_index = index[1]
-            self.dihedral_index = index[2]
+            self.bond_index = np.sort(index[0],axis=1)
+            self.angle_index = np.sort(index[1],axis=1)
+            self.dihedral_index = np.sort(index[2],axis=1)
             self.nonbonded_index = index[3]
             self.nonbond_par = index[4]
             self.position = pos
@@ -278,18 +278,18 @@ class Hessian:
 
         # initial hessian matrix #
         hm = np.zeros((self.mass_type.shape[0]*3,self.mass_type.shape[0]*3))
-
+        print(self.bond_index)
         num_cout = 0
         print("Build bond potential")
         bond_times = tqdm(total=self.bond_index.shape[0],ncols=100)
+        print(self.bond_index)
         for i,j in self.bond_index*3:
 
             k_n = self.second_deriavete_element_two_body(self.bond_par[num_cout,0],self.bond_par[num_cout,1],
                                                          self.mass_type[int(i/3)],self.mass_type[int(j/3)],
                                                          self.position[int(i/3)],self.position[int(j/3)])
+            hm[np.ix_([i,i+1,i+2,j,j+1,j+2],[i,i+1,i+2,j,j+1,j+2])] += k_n
 
-            hm[np.ix_([i,i+1,i+2,j,j+1,j+2],[i,i+1,i+2,j,j+1,j+2])] += k_n*6.9477e-3
-            
             bond_times.update(1)
             num_cout += 1
         bond_times.close()
@@ -344,12 +344,12 @@ class Hessian:
         print("Symmetric matrix: {}".format(self.check_symmetric(hm)))
         print("Determinant: {}".format(np.linalg.det(hm)>0))
         print("Hessian mattrix builded")
-        return hm
+        return np.round(hm,6)
 
     def solve_Hessian(self,h):
        print("Solve eignvalue and eignvector")
        h_val, h_vec = jax.numpy.linalg.eigh(h)
-       print("Positive matrix: {}".format(len(np.where(h_val<0))==0))
+       print("Positive matrix: {}".format(len(np.where(h_val<-1))==0))
        print("Done")
        return h_val, h_vec
 

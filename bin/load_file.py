@@ -24,7 +24,7 @@ class load_psf_pdb_file:
             self.dihedral_index, self.dihedral_atom = self.create_dihedral_list(self.structure)
             #self.improper_index, self.improper_atom = self.create_improper_list(self.structure)
             self.nonbonded_index, self.nonbond_par = self.create_nonbonded_table(self.params)
-            #self.position = self.create_position_table(self.coordinate)
+            self.position = self.create_position_table(self.coordinate)
             self.mass_table = self.create_mass_table()
             
             print('Done')
@@ -145,6 +145,9 @@ class load_psf_pdb_file:
             #print(i.name)
         red_index = np.array(red_index)
         return np.where(red_index==name)[0]
+    
+    def get_position(self):
+        return self.position
 
     def get_table(self):
         if (self.mode_ == "bad"):
