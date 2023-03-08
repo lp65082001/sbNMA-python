@@ -1,7 +1,7 @@
 import numpy as np
 import parmed as pmd
 from bin import load_file, potential, hessian_build, energy_minimze, correlation
-from parmed.charmm import CharmmParameterSet 
+#from parmed.charmm import CharmmParameterSet 
 import time
 
 

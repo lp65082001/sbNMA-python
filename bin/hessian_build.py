@@ -18,14 +18,18 @@ class Hessian:
             self.bond_index = index[0]
             self.angle_index = index[1]
             self.dihedral_index = index[2]
-            self.nonbonded_index = index[3]
-            self.nonbond_par = index[4]
+            self.improper_index = index[3]
+            self.nonbonded_index = index[4]
+            self.nonbond_par = index[5]
             self.position = pos
-            self.real_type = index[5]
-            self.mass_type = index[6]
+            self.real_type = index[6]
+            self.mass_type = index[7]
+            
             self.bond_par = potential[0]
-            self.angle_par = potential[1]
+            self.angle_par = potential[1][0]
+            self.UB_par = potential[1][1]
             self.dihedral_par = potential[2]
+            self.improper_par = potential[3]
 
         else:
             print('Error XD')
@@ -35,18 +39,32 @@ class Hessian:
 
     def check_distance2vdw(self,cutoff = 12):
         print("check pair distance")
-        pos_list = []
-
         # without 1-2, 1-3, 1-4 (Need careful) #
         pos_table = distance_matrix(self.position,self.position)
-        cutoff_dis_list = np.where((np.triu(pos_table,1) < cutoff) & (np.triu(pos_table,1)!=0))
+        cutoff_dis_list = np.where((np.triu(pos_table,1) <= cutoff) & (np.triu(pos_table,1)!=0))
         cutoff_dis_list_ = np.sort(np.vstack((cutoff_dis_list[0][:],cutoff_dis_list[1][:])).T,axis=1)
+        '''
         no_12 = np.array(list(set(map(tuple, cutoff_dis_list_)) - set(map(tuple, self.bond_index))))
-        no_123 = np.array(list(set(map(tuple, no_12)) - set(map(tuple, self.angle_index[:,[0,2]]))))
+        no_12_ = np.array(list(set(map(tuple, no_12)) - set(map(tuple, self.bond_index[:,[1,0]]))))
+        no_123 = np.array(list(set(map(tuple, no_12_)) - set(map(tuple, self.angle_index[:,[0,2]]))))
         no_123_ = np.array(list(set(map(tuple, no_123)) - set(map(tuple, self.angle_index[:,[2,0]]))))
         no_1234 = np.array(list(set(map(tuple, no_123_)) - set(map(tuple, self.dihedral_index[:,[0,3]]))))
         no_1234_ = np.array(list(set(map(tuple, no_1234)) - set(map(tuple, self.dihedral_index[:,[3,0]]))))
-        self.vdw_index = no_1234_.reshape((-1,2))
+        no_1234_1 = np.array(list(set(map(tuple, no_1234_)) - set(map(tuple, self.improper_index[:,[0,1]]))))
+        no_1234_2 = np.array(list(set(map(tuple, no_1234_1)) - set(map(tuple, self.improper_index[:,[1,0]]))))
+        '''
+        no_neighber = np.array(list(set(map(tuple, cutoff_dis_list_)) - set(map(tuple, self.bond_index))-
+                                    set(map(tuple, self.angle_index[:,[0,2]]))-
+                                    set(map(tuple, self.angle_index[:,[2,0]]))-
+                                    set(map(tuple, self.dihedral_index[:,[0,3]]))-
+                                    set(map(tuple, self.dihedral_index[:,[3,0]]))
+                                    #set(map(tuple, self.improper_index[:,[0,2]]))-
+                                    #set(map(tuple, self.improper_index[:,[2,0]]))-
+                                    #set(map(tuple, self.improper_index[:,[0,3]]))-
+                                    #set(map(tuple, self.improper_index[:,[3,0]]))
+                                    ))
+        self.vdw_index = no_neighber.reshape((-1,2))
+        print(no_neighber.shape)
         
         # mixture potential (mix arithmetic)#
         print("Build mix arithmetic table")
@@ -144,16 +162,15 @@ class Hessian:
         
         print("Done")
     
-    @nb.jit
+    #@nb.jit
     def second_deriavete_element_two_body(self,kb,bb,m1,m2,x1,x2,mode='bond'):
         #xi,yi,zi,xj,yj,zj,k,b = symbols('xi yi zi xj yj zj k b', real=True)
+        substitute_num = []
         if (mode=='bond'):
-            substitute_num = []
             for i in range(0,self.bond_element.shape[0]):
                 #substitute_num.append(self.bond_element[i](kb,bb,x1[0],x1[1],x1[2],x2[0],x2[1],x2[2]))
                 substitute_num.append(self.bond_element[i](x1[0],x1[1],x1[2],x2[0],x2[1],x2[2])*kb*2)
         elif(mode=='vdw'):
-            substitute_num = []
             k_vdw = ((12*kb)/np.linalg.norm(x2-x1)**2)*(13*(bb/np.linalg.norm(x2-x1))**12-7*(bb/np.linalg.norm(x2-x1))**6)
             if(k_vdw<0):
                 k_vdw=0
@@ -179,7 +196,7 @@ class Hessian:
         
         return (two_body_element/mass_reduce).astype('float')
 
-    @nb.jit
+    #@nb.jit
     def second_deriavete_element_three_body(self,kb,bb,m1,m2,m3,x1,x2,x3):
         #xi,yi,zi,xj,yj,zj,xk,yk,zk,k,b = symbols('xi yi zi xj yj zj xk yk zk k b', real=True)
 
@@ -210,17 +227,16 @@ class Hessian:
 
         return (three_body_element/mass_reduce).astype('float')
 
-    @nb.jit
+    #@nb.jit
     def second_deriavete_element_four_body(self,kb,bb,nn,m1,m2,m3,m4,x1,x2,x3,x4,mode='dihedral'): 
         #xi,yi,zi,xj,yj,zj,xk,yk,zk,xl,yl,zl,k,b,n = symbols('xi yi zi xj yj zj xk yk zk xl yl zl k b n', real=True)
-        if(mode=='dihedral'):
-            substitute_num = []
-            
+        substitute_num = []
+        if(mode=='dihedral'):   
             for i in range(0,self.dihedral_element.shape[0]):
                 substitute_num.append(self.dihedral_element[i](x1[0],x1[1],x1[2],x2[0],x2[1],x2[2],x3[0],x3[1],x3[2],x4[0],x4[1],x4[2])*nn**2*kb)  
-        elif(mode=='impropor'):
-            for i in range(0,self.impropor_element.shape[0]):
-                substitute_num.append(self.impropor_element[i](x1[0],x1[1],x1[2],x2[0],x2[1],x2[2],x3[0],x3[1],x3[2],x4[0],x4[1],x4[2]))  
+        elif(mode=='improper'):
+            for i in range(0,self.dihedral_element.shape[0]):
+                substitute_num.append(self.dihedral_element[i](x1[0],x1[1],x1[2],x2[0],x2[1],x2[2],x3[0],x3[1],x3[2],x4[0],x4[1],x4[2])*2*kb)  
         else:
             print('error XD')
 
@@ -254,7 +270,7 @@ class Hessian:
 
         return (four_body_element/mass_reduce).astype('float')
             
-    @nb.jit
+    #@nb.jit
     def build_matrix(self):
         # second deriavete element #
         self.element_initialization()
@@ -265,22 +281,33 @@ class Hessian:
         # initial hessian matrix #
         hm = np.zeros((self.mass_type.shape[0]*3,self.mass_type.shape[0]*3))
 
+        print("Build bonded two-body potential")
+        # bond #
         num_cout = 0
-        print("Build bond potential")
-        bond_times = tqdm(total=self.bond_index.shape[0],ncols=100)
+        tb_times = tqdm(total=self.bond_index.shape[0]+self.angle_index.shape[0],ncols=100)
         for i,j in self.bond_index*3:
             k_n = self.second_deriavete_element_two_body(self.bond_par[num_cout,0],self.bond_par[num_cout,1],
                                                          self.mass_type[int(i/3)],self.mass_type[int(j/3)],
                                                          self.position[int(i/3)],self.position[int(j/3)])
             
             hm[np.ix_([i,i+1,i+2,j,j+1,j+2],[i,i+1,i+2,j,j+1,j+2])] += k_n
-            bond_times.update(1)
+            tb_times.update(1)
             num_cout += 1
-        bond_times.close()
-        
-        print("Build angle potential")
+        # UB #
         num_cout = 0
-        angle_times = tqdm(total=self.angle_index.shape[0],ncols=100)
+        for i,x_,j in self.angle_index*3:
+            k_ub = self.second_deriavete_element_two_body(self.UB_par[num_cout,0],self.UB_par[num_cout,1],
+                                                         self.mass_type[int(i/3)],self.mass_type[int(j/3)],
+                                                         self.position[int(i/3)],self.position[int(j/3)])
+            
+            hm[np.ix_([i,i+1,i+2,j,j+1,j+2],[i,i+1,i+2,j,j+1,j+2])] += k_ub
+            tb_times.update(1)
+        tb_times.close()
+        
+        print("Build bonded three-body potential")
+        # angle #
+        num_cout = 0
+        trb_times = tqdm(total=self.angle_index.shape[0],ncols=100)
         for i,j,k in self.angle_index*3:
             
             ka_n = self.second_deriavete_element_three_body(self.angle_par[num_cout,0],np.deg2rad(self.angle_par[num_cout,1]),
@@ -289,26 +316,39 @@ class Hessian:
             
             hm[np.ix_([i,i+1,i+2,j,j+1,j+2,k,k+1,k+2],[i,i+1,i+2,j,j+1,j+2,k,k+1,k+2])] += ka_n
 
-            angle_times.update(1)
+            trb_times.update(1)
             num_cout += 1
-        angle_times.close()
+        trb_times.close()
 
         
-        print("Build dihedral potential")
+        print("Build bonded four-body potential")
+        # dihedral #
         num_cout = 0
-        dihedral_times = tqdm(total=self.dihedral_index.shape[0],ncols=100)
+        fb_times = tqdm(total=self.dihedral_index.shape[0]+self.improper_index.shape[0],ncols=100)
         for i,j,k,l in self.dihedral_index*3: 
             kd_n = self.second_deriavete_element_four_body(self.dihedral_par[num_cout,0],np.deg2rad(self.dihedral_par[num_cout,2]),self.dihedral_par[num_cout,1],
                                                            self.mass_type[int(i/3)],self.mass_type[int(j/3)],self.mass_type[int(k/3)],self.mass_type[int(l/3)],
                                                            self.position[int(i/3)],self.position[int(j/3)],self.position[int(k/3)],self.position[int(l/3)])
             
-            hm[np.ix_([i,i+1,i+2,j,j+1,j+2,k,k+1,k+2,l,l+1,l+2],[i,i+1,i+2,j,j+1,j+2,k,k+1,k+2,l,l+1,l+2])] += kd_n*6.9477e-3
+            #hm[np.ix_([i,i+1,i+2,j,j+1,j+2,k,k+1,k+2,l,l+1,l+2],[i,i+1,i+2,j,j+1,j+2,k,k+1,k+2,l,l+1,l+2])] += kd_n
 
-            dihedral_times.update(1)
+            fb_times.update(1)
             num_cout += 1
-        dihedral_times.close()
+        # improper #
+        num_cout = 0
+        for i,j,k,l in self.improper_index*3: 
+            ki_n = self.second_deriavete_element_four_body(self.improper_par[num_cout,0],np.deg2rad(self.improper_par[num_cout,1]),None,
+                                                           self.mass_type[int(i/3)],self.mass_type[int(j/3)],self.mass_type[int(k/3)],self.mass_type[int(l/3)],
+                                                           self.position[int(i/3)],self.position[int(j/3)],self.position[int(k/3)],self.position[int(l/3)],
+                                                           mode='improper')
+            
+            #hm[np.ix_([i,i+1,i+2,j,j+1,j+2,k,k+1,k+2,l,l+1,l+2],[i,i+1,i+2,j,j+1,j+2,k,k+1,k+2,l,l+1,l+2])] += ki_n
+
+            fb_times.update(1)
+            num_cout += 1
+        fb_times.close()
         
-        print("Build vdw potential")
+        print("Build nonbonded pairwise potential")
         num_cout = 0
         vdw_times = tqdm(total=self.vdw_index.shape[0],ncols=100)
         for i,j in self.vdw_index*3:

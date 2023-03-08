@@ -11,16 +11,17 @@ class charmm_potential:
             self.bond_index = x[0]
             self.angle_index = x[1]
             self.dihedral_index = x[2]
-            self.nonbond_index = x[3]
-            self.nonbond_table = x[4]
+            self.improper_index = x[3]
+            self.nonbond_index = x[4]
+            self.nonbond_table = x[5]
             #self.position = x[5]
-            self.type = x[5]
+            self.type = x[6]  
             self.structure = y
         else:
             print('Error XD')
 
     def parameter_table(self):
-        return [self.bond_parameter_table(),self.angle_parameter_table(),self.dihedral_parameter_table()]
+        return [self.bond_parameter_table(),self.angle_parameter_table(),self.dihedral_parameter_table(),self.improper_parameter_table()]
             
     def bond_parameter_table(self):
         bond_par = []
@@ -32,11 +33,16 @@ class charmm_potential:
     
     def angle_parameter_table(self):
         angle_par = []
+        UB_par = []
         for i in range(0,self.angle_index.shape[0]):
             angle_par.append([self.params.angle_types[(self.type[self.angle_index[i,0]], self.type[self.angle_index[i,1]], self.type[self.angle_index[i,2]])].k,
             self.params.angle_types[(self.type[self.angle_index[i,0]], self.type[self.angle_index[i,1]], self.type[self.angle_index[i,2]])].theteq])
 
-        return np.array(angle_par).reshape(-1,2)
+        for i in range(0,self.angle_index.shape[0]):
+            UB_par.append([self.params.urey_bradley_types[(self.type[self.angle_index[i,0]], self.type[self.angle_index[i,1]], self.type[self.angle_index[i,2]])].k,
+            self.params.urey_bradley_types[(self.type[self.angle_index[i,0]], self.type[self.angle_index[i,1]], self.type[self.angle_index[i,2]])].req])
+
+        return np.array(angle_par).reshape(-1,2), np.array(UB_par).reshape(-1,2)
     
     def dihedral_parameter_table(self):
         dihedral_par = []
@@ -44,7 +50,17 @@ class charmm_potential:
             dihedral_par.append([self.params.dihedral_types[(self.type[self.dihedral_index[i,0]], self.type[self.dihedral_index[i,1]], self.type[self.dihedral_index[i,2]], self.type[self.dihedral_index[i,3]])][0].phi_k,
             self.params.dihedral_types[(self.type[self.dihedral_index[i,0]], self.type[self.dihedral_index[i,1]], self.type[self.dihedral_index[i,2]], self.type[self.dihedral_index[i,3]])][0].per,
             self.params.dihedral_types[(self.type[self.dihedral_index[i,0]], self.type[self.dihedral_index[i,1]], self.type[self.dihedral_index[i,2]], self.type[self.dihedral_index[i,3]])][0].phase])
-        
         return np.array(dihedral_par).reshape(-1,3)
+    
+    def improper_parameter_table(self):
+        improper_par = []
+        for i in range(0,self.improper_index.shape[0]):
+
+            improper_par.append([self.params.improper_types[(self.type[self.improper_index[i,0]], self.type[self.improper_index[i,1]], self.type[self.improper_index[i,2]], self.type[self.improper_index[i,3]])].psi_k,
+            self.params.improper_types[(self.type[self.improper_index[i,0]], self.type[self.improper_index[i,1]], self.type[self.improper_index[i,2]], self.type[self.improper_index[i,3]])].psi_eq])
+        return np.array(improper_par).reshape(-1,2)
+
+
+        
 
 

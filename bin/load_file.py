@@ -18,11 +18,11 @@ class load_psf_pdb_file:
 
     def load(self):   
         if (self.mode_ == "bad"):
-            print('Load only bad potential')
+            print('Structure and Potential initialization!')
             self.bond_index, self.bond_atom = self.create_bond_list(self.structure)
             self.angle_index, self.angle_atom = self.create_angle_list(self.structure)
             self.dihedral_index, self.dihedral_atom = self.create_dihedral_list(self.structure)
-            #self.improper_index, self.improper_atom = self.create_improper_list(self.structure)
+            self.improper_index, self.improper_atom = self.create_improper_list(self.structure)
             self.nonbonded_index, self.nonbond_par = self.create_nonbonded_table(self.params)
             self.position = self.create_position_table(self.coordinate)
             self.mass_table = self.create_mass_table()
@@ -154,7 +154,7 @@ class load_psf_pdb_file:
             return [self.bond_index,
             self.angle_index, 
             self.dihedral_index,
-            #self.improper_index,
+            self.improper_index,
             self.nonbonded_index, self.nonbond_par,
             #self.position,
             self.real_type,
