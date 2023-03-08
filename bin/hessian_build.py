@@ -33,7 +33,7 @@ class Hessian:
     def check_symmetric(self,a, tol=1e-8):
         return np.all(np.abs(a-a.T) < tol)
 
-    def check_distance2vdw(self,cutoff = 8):
+    def check_distance2vdw(self,cutoff = 12):
         print("check pair distance")
         pos_list = []
 
@@ -110,7 +110,7 @@ class Hessian:
             angle_times.update()
         self.angle_element = np.array(a_t)
         angle_times.close()
-        '''
+        
         # dihedral potential #
  
         #v1,v2,v3 (xj-xi,yj-yi,zj-zi),(xk-xj,yk-yj,zk-zj),(xl-xk,yl-yk,zl-zk)
@@ -120,7 +120,7 @@ class Hessian:
         phi = ((((yj-yi)*(zk-zj)-(zj-zi)*(yk-yj))*((yk-yj)*(zl-zk)-(zk-zj)*(yl-yk)))+(((zj-zi)*(xk-xj)-(xj-xi)*(zk-zj))*((zk-zj)*(xl-xk)-(xk-xj)*(zl-zk)))
                +(((xj-xi)*(yk-yj)-(yj-yi)*(xk-xj))*((xk-xj)*(yl-yk)-(yk-yj)*(xl-xk))))/((((yj-yi)*(zk-zj)-(zj-zi)*(yk-yj))**2+((zj-zi)*(xk-xj)-(xj-xi)*(zk-zj))**2+((xj-xi)*(yk-yj)-(yj-yi)*(xk-xj))**2)**0.5*
                                                                                         (((yk-yj)*(zl-zk)-(zk-zj)*(yl-yk))**2+((zk-zj)*(xl-xk)-(xk-xj)*(zl-zk))**2+((yl-yk)-(yk-yj)*(xl-xk))**2)**0.5)
-        dihedral_potential_form = k*(1-cos(phi*n-b))
+        #dihedral_potential_form = k*(1-cos(phi*n-b))
         dihedral_table = np.array([[xi,xi],[xi,yi],[xi,zi],[xi,xj],[xi,yj],[xi,zj],[xi,xk],[xi,yk],[xi,zk],[xi,xl],[xi,yl],[xi,zl],
                                    [yi,yi],[yi,zi],[yi,xj],[yi,yj],[yi,zj],[yi,xk],[yi,yk],[yi,zk],[yi,xl],[yi,yl],[yi,zl],
                                    [zi,zi],[zi,xj],[zi,yj],[zi,zj],[zi,xk],[zi,yk],[zi,zk],[zi,xl],[zi,yl],[zi,zl],
@@ -137,13 +137,14 @@ class Hessian:
         print("Four body element loading ")
         dihedral_times = tqdm(total=dihedral_table.shape[0],ncols=100)
         for i,j in dihedral_table:
-            di_t.append(lambdify((k,b,n,xi,yi,zi,xj,yj,zj,xk,yk,zk,xl,yl,zl),(dihedral_potential_form.diff(i).diff(j)),'numpy'))
+            di_t.append(lambdify((xi,yi,zi,xj,yj,zj,xk,yk,zk,xl,yl,zl),(phi.diff(i)*phi.diff(j)),'numpy'))
             dihedral_times.update()
         self.dihedral_element  = np.array(di_t)
         dihedral_times.close()
-        '''
+        
         print("Done")
-
+    
+    @nb.jit
     def second_deriavete_element_two_body(self,kb,bb,m1,m2,x1,x2,mode='bond'):
         #xi,yi,zi,xj,yj,zj,k,b = symbols('xi yi zi xj yj zj k b', real=True)
         if (mode=='bond'):
@@ -153,9 +154,13 @@ class Hessian:
                 substitute_num.append(self.bond_element[i](x1[0],x1[1],x1[2],x2[0],x2[1],x2[2])*kb*2)
         elif(mode=='vdw'):
             substitute_num = []
+            k_vdw = ((12*kb)/np.linalg.norm(x2-x1)**2)*(13*(bb/np.linalg.norm(x2-x1))**12-7*(bb/np.linalg.norm(x2-x1))**6)
+            if(k_vdw<0):
+                k_vdw=0
+            elif(k_vdw>10):
+                k_vdw=10
             for i in range(0,self.bond_element.shape[0]):
-                substitute_num.append(self.bond_element[i](x1[0],x1[1],x1[2],x2[0],x2[1],x2[2])*
-                                      ((12*kb)/np.linalg.norm(x2-x1)**2)*(13*(bb/np.linalg.norm(x2-x1))**12-7*(bb/np.linalg.norm(x2-x1))**6))
+                substitute_num.append(self.bond_element[i](x1[0],x1[1],x1[2],x2[0],x2[1],x2[2])*k_vdw)
         else:
             print("error XD")
         two_body_element = np.array([[substitute_num[0],substitute_num[1],substitute_num[2],substitute_num[3],substitute_num[4],substitute_num[5]],
@@ -174,6 +179,7 @@ class Hessian:
         
         return (two_body_element/mass_reduce).astype('float')
 
+    @nb.jit
     def second_deriavete_element_three_body(self,kb,bb,m1,m2,m3,x1,x2,x3):
         #xi,yi,zi,xj,yj,zj,xk,yk,zk,k,b = symbols('xi yi zi xj yj zj xk yk zk k b', real=True)
 
@@ -204,16 +210,17 @@ class Hessian:
 
         return (three_body_element/mass_reduce).astype('float')
 
+    @nb.jit
     def second_deriavete_element_four_body(self,kb,bb,nn,m1,m2,m3,m4,x1,x2,x3,x4,mode='dihedral'): 
         #xi,yi,zi,xj,yj,zj,xk,yk,zk,xl,yl,zl,k,b,n = symbols('xi yi zi xj yj zj xk yk zk xl yl zl k b n', real=True)
         if(mode=='dihedral'):
             substitute_num = []
             
             for i in range(0,self.dihedral_element.shape[0]):
-                substitute_num.append(self.dihedral_element[i](kb,bb,nn,x1[0],x1[1],x1[2],x2[0],x2[1],x2[2],x3[0],x3[1],x3[2],x4[0],x4[1],x4[2]))  
+                substitute_num.append(self.dihedral_element[i](x1[0],x1[1],x1[2],x2[0],x2[1],x2[2],x3[0],x3[1],x3[2],x4[0],x4[1],x4[2])*nn**2*kb)  
         elif(mode=='impropor'):
             for i in range(0,self.impropor_element.shape[0]):
-                substitute_num.append(self.impropor_element[i](kb,bb,x1[0],x1[1],x1[2],x2[0],x2[1],x2[2],x3[0],x3[1],x3[2],x4[0],x4[1],x4[2]))  
+                substitute_num.append(self.impropor_element[i](x1[0],x1[1],x1[2],x2[0],x2[1],x2[2],x3[0],x3[1],x3[2],x4[0],x4[1],x4[2]))  
         else:
             print('error XD')
 
@@ -253,7 +260,7 @@ class Hessian:
         self.element_initialization()
         
         # Found Pairwise #
-        self.check_distance2vdw(cutoff=4)
+        self.check_distance2vdw(cutoff=12)
 
         # initial hessian matrix #
         hm = np.zeros((self.mass_type.shape[0]*3,self.mass_type.shape[0]*3))
@@ -280,13 +287,13 @@ class Hessian:
                                                             self.mass_type[int(i/3)],self.mass_type[int(j/3)],self.mass_type[int(k/3)],
                                                             self.position[int(i/3)],self.position[int(j/3)],self.position[int(k/3)])
             
-            hm[np.ix_([i,i+1,i+2,j,j+1,j+2,k,k+1,k+2],[i,i+1,i+2,j,j+1,j+2,k,k+1,k+2])] += ka_n*6.9477e-3
+            hm[np.ix_([i,i+1,i+2,j,j+1,j+2,k,k+1,k+2],[i,i+1,i+2,j,j+1,j+2,k,k+1,k+2])] += ka_n
 
             angle_times.update(1)
             num_cout += 1
         angle_times.close()
 
-        '''
+        
         print("Build dihedral potential")
         num_cout = 0
         dihedral_times = tqdm(total=self.dihedral_index.shape[0],ncols=100)
@@ -302,12 +309,10 @@ class Hessian:
             dihedral_times.update(1)
             num_cout += 1
         dihedral_times.close()
-        '''
         
         print("Build vdw potential")
         num_cout = 0
         vdw_times = tqdm(total=self.vdw_index.shape[0],ncols=100)
-        print(self.vdw_index)
         for i,j in self.vdw_index*3:
             k_vn = self.second_deriavete_element_two_body(self.pair_par[num_cout,0],self.pair_par[num_cout,1],
                                                          self.mass_type[int(i/3)],self.mass_type[int(j/3)],
@@ -318,7 +323,7 @@ class Hessian:
             vdw_times.update(1)
             num_cout += 1
         vdw_times.close()
-        
+
         print("Symmetric matrix: {}".format(self.check_symmetric(hm)))
         print("Determinant: {}".format(np.linalg.det(hm)>0))
         print("Hessian mattrix builded")

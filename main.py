@@ -26,12 +26,12 @@ if __name__ == '__main__':
     model_potential = potent.parameter_table()
     
     # Energy minimization #
-    em_pos = energy_minimze.min(topology,bonding)
-    #init_pos = model_info.get_position()
+    #em_pos = energy_minimze.min(topology,bonding)
+    init_pos = model_info.get_position()
     # build hessian matrix #
     
-    hessian_ = hessian_build.Hessian(model_index,model_potential,em_pos)
-    #hessian_ = hessian_build.Hessian(model_index,model_potential,init_pos)
+    #hessian_ = hessian_build.Hessian(model_index,model_potential,em_pos)
+    hessian_ = hessian_build.Hessian(model_index,model_potential,init_pos)
     
     hessian_martix = hessian_.build_matrix()
 
@@ -39,9 +39,9 @@ if __name__ == '__main__':
     eignvalue,eignvector = hessian_.solve_Hessian(hessian_martix)
 
     # calculate dynamics coupling #
-    #dc = correlation.dynamics_coupling(eignvalue,eignvector,ca_table=ca_index)
-    #dc.run(reduce=True,ccm = True)
-    #dc.plot_matrix()
+    dc = correlation.dynamics_coupling(eignvalue,eignvector,ca_table=ca_index)
+    dc.run(reduce=True,ccm = True)
+    dc.plot_matrix()
 
     #np.save('./ccm/own.npy',dc.get_ccm())
 
