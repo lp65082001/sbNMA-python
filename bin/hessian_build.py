@@ -297,9 +297,7 @@ class Hessian:
         print("Build dihedral potential")
         num_cout = 0
         dihedral_times = tqdm(total=self.dihedral_index.shape[0],ncols=100)
-        for i,j,k,l in self.dihedral_index*3:
-            
-            
+        for i,j,k,l in self.dihedral_index*3: 
             kd_n = self.second_deriavete_element_four_body(self.dihedral_par[num_cout,0],np.deg2rad(self.dihedral_par[num_cout,2]),self.dihedral_par[num_cout,1],
                                                            self.mass_type[int(i/3)],self.mass_type[int(j/3)],self.mass_type[int(k/3)],self.mass_type[int(l/3)],
                                                            self.position[int(i/3)],self.position[int(j/3)],self.position[int(k/3)],self.position[int(l/3)])
