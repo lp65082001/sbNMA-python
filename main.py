@@ -39,11 +39,11 @@ if __name__ == '__main__':
     eignvalue,eignvector = hessian_.solve_Hessian(hessian_martix)
 
     # calculate dynamics coupling #
-    dc = correlation.dynamics_coupling(eignvalue,eignvector,ca_table=ca_index)
-    dc.run(reduce=True,ccm = True)
-    dc.plot_matrix()
+    #dc = correlation.dynamics_coupling(eignvalue,eignvector,ca_table=ca_index)
+    #dc.run(reduce=True,ccm = True)
+    #dc.plot_matrix()
 
-    np.save('./ccm/own.npy',dc.get_ccm())
+    #np.save('./ccm/own.npy',dc.get_ccm())
 
 
     

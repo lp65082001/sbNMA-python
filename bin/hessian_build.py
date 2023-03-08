@@ -6,6 +6,7 @@ import warnings
 import time
 import jax
 from scipy.spatial import distance_matrix
+import numba as nb
 
 warnings.filterwarnings('ignore')
 
@@ -14,8 +15,9 @@ class Hessian:
     def __init__(self,index,potential,pos,mode='bad'):
         if (mode == 'bad'):
             self.bond_index = np.sort(index[0],axis=1)
+            self.bond_index = index[0]
             self.angle_index = index[1]
-            self.dihedral_index = np.sort(index[2],axis=1)
+            self.dihedral_index = index[2]
             self.nonbonded_index = index[3]
             self.nonbond_par = index[4]
             self.position = pos
@@ -34,23 +36,17 @@ class Hessian:
     def check_distance2vdw(self,cutoff = 8):
         print("check pair distance")
         pos_list = []
-        pos_table = distance_matrix(self.position,self.position)
-        cutoff_dis_list = np.where((np.triu(pos_table,1) < cutoff) & (np.triu(pos_table,1)!=0))
-
 
         # without 1-2, 1-3, 1-4 (Need careful) #
-        vdw_times = tqdm(total=cutoff_dis_list[0].shape[0],ncols=100)
-        for k in range(0,cutoff_dis_list[0].shape[0]):
-        #for k in range(0,100):
-            #print(np.where(self.bond_index==cutoff_dis_list[0][k]))
-            #print(np.where(self.bond_index==cutoff_dis_list[1][k]))
-            if (len(np.intersect1d(np.where(self.bond_index==cutoff_dis_list[0][k])[0],np.where(self.bond_index==cutoff_dis_list[1][k])[0]))==0): 
-                if (len(np.intersect1d(np.where(self.angle_index==cutoff_dis_list[0][k])[0],np.where(self.angle_index==cutoff_dis_list[1][k])[0]))==0):    
-                    if (len(np.intersect1d(np.where(self.dihedral_index==cutoff_dis_list[0][k])[0],np.where(self.dihedral_index==cutoff_dis_list[1][k])[0]))==0):        
-                        pos_list.append([cutoff_dis_list[0][k],cutoff_dis_list[1][k]])
-            vdw_times.update()
-        vdw_times.close()
-        self.vdw_index = np.array(pos_list).reshape((-1,2))
+        pos_table = distance_matrix(self.position,self.position)
+        cutoff_dis_list = np.where((np.triu(pos_table,1) < cutoff) & (np.triu(pos_table,1)!=0))
+        cutoff_dis_list_ = np.sort(np.vstack((cutoff_dis_list[0][:],cutoff_dis_list[1][:])).T,axis=1)
+        no_12 = np.array(list(set(map(tuple, cutoff_dis_list_)) - set(map(tuple, self.bond_index))))
+        no_123 = np.array(list(set(map(tuple, no_12)) - set(map(tuple, self.angle_index[:,[0,2]]))))
+        no_123_ = np.array(list(set(map(tuple, no_123)) - set(map(tuple, self.angle_index[:,[2,0]]))))
+        no_1234 = np.array(list(set(map(tuple, no_123_)) - set(map(tuple, self.dihedral_index[:,[0,3]]))))
+        no_1234_ = np.array(list(set(map(tuple, no_1234)) - set(map(tuple, self.dihedral_index[:,[3,0]]))))
+        self.vdw_index = no_1234_.reshape((-1,2))
         
         # mixture potential (mix arithmetic)#
         print("Build mix arithmetic table")
@@ -64,7 +60,7 @@ class Hessian:
         self.pair_par = np.array(vdw_pot).reshape(-1,2)
         vdw_times_2.close()
         print("Done") 
-
+        
     def element_initialization(self):
         print("Element initialization!")
 
@@ -251,12 +247,13 @@ class Hessian:
 
         return (four_body_element/mass_reduce).astype('float')
             
+    @nb.jit
     def build_matrix(self):
         # second deriavete element #
         self.element_initialization()
         
         # Found Pairwise #
-        self.check_distance2vdw(cutoff=5)
+        self.check_distance2vdw(cutoff=4)
 
         # initial hessian matrix #
         hm = np.zeros((self.mass_type.shape[0]*3,self.mass_type.shape[0]*3))
@@ -310,6 +307,7 @@ class Hessian:
         print("Build vdw potential")
         num_cout = 0
         vdw_times = tqdm(total=self.vdw_index.shape[0],ncols=100)
+        print(self.vdw_index)
         for i,j in self.vdw_index*3:
             k_vn = self.second_deriavete_element_two_body(self.pair_par[num_cout,0],self.pair_par[num_cout,1],
                                                          self.mass_type[int(i/3)],self.mass_type[int(j/3)],
