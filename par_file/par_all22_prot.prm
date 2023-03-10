@@ -2220,6 +2220,8 @@ CPH1 CPH1  NR1  HR3  0.5000         0      0.0000 ! ALLOW ARO
                 ! adm jr., 3/24/92, maintain old aliphatic H VDW params
 CPH1 NR1  CPH1  HR3  0.5000         0      0.0000 ! ALLOW ARO
                 ! adm jr., 3/24/92, maintain old aliphatic H VDW params
+C    CT2    N    O     120.0000         0      0.0000 ! ALLOW   PEP POL ARO
+                ! NMA Vibrational Modes (LK)
 
 
 CMAP

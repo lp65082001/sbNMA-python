@@ -66,7 +66,7 @@ class Hessian:
                                     #set(map(tuple, self.improper_index[:,[3,0]]))
                                     ))
         self.vdw_index = no_neighber.reshape((-1,2))
-        print(no_neighber.shape)
+        #print(no_neighber.shape)
         
         # mixture potential (mix arithmetic)#
         print("Build mix arithmetic table")
@@ -88,9 +88,6 @@ class Hessian:
 
         # bond potential #
         bond_rij = ((xj-xi)**2+(yj-yi)**2+(zj-zi)**2)**0.5
-        #bond_potential_form = k*(bond_rij-b)**2
-        #bond_potential_form = k*(bond_rij)**2
-
         bond_table = np.array([[xi,xi],[xi,yi],[xi,zi],[xi,xj],[xi,yj],[xi,zj],
                                [yi,yi],[yi,zi],[yi,xj],[yi,yj],[yi,zj],
                                [zi,zi],[zi,xj],[zi,yj],[zi,zj],
@@ -111,8 +108,6 @@ class Hessian:
         #cos_theta = (((xj-xi)**2+(yj-yi)**2+(zj-zi)**2)+((xk-xj)**2+(yk-yj)**2+(zk-zj)**2)-((xk-xi)**2+(yk-yi)**2+(zk-zi)))/(2*((xj-xi)**2+(yj-yi)**2+(zj-zi)**2)**0.5+((xk-xj)**2+(yk-yj)**2+(zk-zj)**2))
         #angle_potential_form = k*(cos_theta-b)**2
         theta = acos((((xj-xi)**2+(yj-yi)**2+(zj-zi)**2)+((xk-xj)**2+(yk-yj)**2+(zk-zj)**2)-((xk-xi)**2+(yk-yi)**2+(zk-zi)**2))/(2*((xj-xi)**2+(yj-yi)**2+(zj-zi)**2)**0.5*((xk-xj)**2+(yk-yj)**2+(zk-zj)**2)**0.5))
-
-
         angle_table = np.array([[xi,xi],[xi,yi],[xi,zi],[xi,xj],[xi,yj],[xi,zj],[xi,xk],[xi,yk],[xi,zk],
                                 [yi,yi],[yi,zi],[yi,xj],[yi,yj],[yi,zj],[yi,xk],[yi,yk],[yi,zk],
                                 [zi,zi],[zi,xj],[zi,yj],[zi,zj],[zi,xk],[zi,yk],[zi,zk],
@@ -132,7 +127,6 @@ class Hessian:
         angle_times.close()
         
         # dihedral potential #
- 
         #v1 = (xj-xi,yj-yi,zj-zi)
         #v2 = (xk-xj,yk-yj,zk-zj)
         #v3 = (xl-xk,yl-yk,zl-zk)
@@ -367,9 +361,7 @@ class Hessian:
 
         print("Symmetric matrix: {}".format(self.check_symmetric(hm)))
         print("Determinant: {}".format(np.linalg.det(hm)>0))
-        print("Hessian mattrix builded")
-        #print(hm[0:12,0:12])
-        
+        print("Hessian mattrix builded")        
         return np.round(hm,6)
 
     def solve_Hessian(self,h):
