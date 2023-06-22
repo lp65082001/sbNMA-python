@@ -6,8 +6,8 @@ import time
 
 
 if __name__ == '__main__':
-    topology = './example/gap_p.pdb'
-    bonding = './example/gap_p.psf'
+    topology = './example/test3_min.pdb'
+    bonding = './example/test3_min.psf'
 
     # Input loading 
     psf = pmd.charmm.psf.CharmmPsfFile(bonding)
