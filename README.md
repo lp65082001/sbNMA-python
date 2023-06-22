@@ -1,5 +1,6 @@
-# PNM
+# sbNMA
 The custom potential of Normal mode
+
 
 
 #install jax in m1
